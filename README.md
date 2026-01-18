@@ -21,3 +21,8 @@ mvn spring-boot:run
 - http://localhost:8080/h2-console
 - JDBC URL: `jdbc:h2:mem:stocksdb`
 - user: `sa` / password: 空
+
+## code fommater
+### using "spotless"
+- mvn spotless:check
+- mvn spotless:apply
