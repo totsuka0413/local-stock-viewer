@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html data-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title th:text="'Chart - ' + ${stock.symbol}"></title>
+  <link rel="stylesheet" href="/css/theme.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="/js/chart.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1 th:text="${stock.symbol} + ' ' + (${stock.name} ?: '')"></h1>
+      <div class="muted">区分: <span th:text="${stock.category}"></span></div>
+    </div>
+    <div class="row-actions">
+      <a class="btnlink" href="/stocks">← 戻る</a>
+      <form method="post" th:action="@{|/stocks/${stock.id}/refresh|}">
+        <input type="hidden" name="range" th:value="${range}"/>
+        <button class="primary" type="submit">Stooqから更新（5年）</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="row" style="align-items:center; margin-bottom:10px;">
+      <div class="muted">表示範囲:</div>
+      <div class="pillbar">
+        <a th:each="r : ${ranges}"
+           th:href="@{|/stocks/${stock.id}?range=${r}|}"
+           th:text="${r.toUpperCase()}"
+           th:classappend="${r} == ${range} ? ' active' : ''"></a>
+      </div>
+    </div>
+
+    <div class="chartWrap">
+      <canvas id="priceChart"></canvas>
+    </div>
+
+    <div id="noData" class="muted" style="margin-top:10px; display:none;">
+      データがありません。右上の「Stooqから更新（5年）」を押してください。
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  const symbol = [[${stock.symbol}]];
+  const range = [[${range}]];
+  renderCloseChart(symbol, range);
+</script>
+
+</body>
+</html>
